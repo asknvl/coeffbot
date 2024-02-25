@@ -1,0 +1,251 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vs="using:coeffbot.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="coeffbot.Views.CoeffBotView">
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />
+    </UserControl.Styles>
+
+    <Grid
+        
+        
+        RowDefinitions="Auto, Auto, *">
+        <StackPanel
+            Grid.Row="0"
+            Orientation="Vertical"
+            IsEnabled="{Binding IsEditable}">
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Версия:
+                </TextBlock>
+                <TextBox
+                    IsEnabled="False"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Type}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 80">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Геотег:
+                </TextBlock>
+                <TextBox
+                    IsEnabled="False"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Geotag}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Токен:
+                </TextBlock>
+                <TextBox
+                    IsEnabled="False"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Token}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Имя:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Name}"/>
+            </Grid>
+            <!--<Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Ссылка:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Link}"/>
+            </Grid>-->
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Личка:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding PM}"/>
+            </Grid>
+            <Grid
+               ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Источники:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Sources}"/>
+            </Grid>
+            <!--<Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Канал:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Channel}"/>
+            </Grid>-->
+            <Grid
+                Margin="103, 0, 0, 0">
+                <CheckBox
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding Postbacks}">
+                    Получать постбеки
+                </CheckBox>
+            </Grid>
+        </StackPanel>
+        <Grid
+            ColumnDefinitions="Auto, Auto, Auto"
+            RowDefinitions="Auto, Auto"
+            Grid.Row="1">
+            <Button
+                IsEnabled="{Binding !IsActive, Mode=TwoWay}"
+                Command="{Binding startCmd}"
+                Grid.Column="0">
+                Запустить
+            </Button>
+            <Button
+                IsEnabled="{Binding IsActive, Mode=TwoWay}"
+                Command="{Binding stopCmd}"
+                Grid.Column="1">
+                Остановить
+            </Button>
+            <Button
+                IsEnabled="{Binding !IsActive, Mode=TwoWay}"
+                IsVisible="{Binding !IsActive}"
+                Command="{Binding editCmd}"
+                Grid.Column="2">
+                Редактировать
+            </Button>
+
+            <StackPanel
+              Grid.Row="1"
+              Grid.Column="2"
+              IsVisible="{Binding IsEditable}">
+                <Button
+                    Command="{Binding saveCmd}"
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="2">
+                    Сохранить
+                </Button>
+                <Button
+                    Command="{Binding cancelCmd}"
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="2">
+                    Отмена
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Grid            
+            Grid.Row="2"
+            RowDefinitions="Auto, *"
+            IsVisible="{Binding IsActive}">
+            <TextBlock
+                Grid.Row="0"
+                VerticalAlignment="Center"
+                Margin="10"
+                FontWeight="DemiBold"
+                HorizontalAlignment="Center">
+                Настройка постинга и пушей
+            </TextBlock>
+            <Border    
+                HorizontalAlignment="Center"
+                Grid.Row="1">
+                <Grid                    
+                    RowDefinitions="Auto, Auto">
+                    <ScrollViewer
+                        Grid.Row="0">
+                        <ItemsControl
+                            VerticalAlignment="Stretch"
+                            Items="{Binding MessageProcessor.MessageTypes}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <vs:messageControlView/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                    <Grid
+                        HorizontalAlignment="Center"                     
+                        Margin="10"
+                        Grid.Row="1"
+                        RowDefinitions="Auto, Auto"
+                        ColumnDefinitions="100, 100">
+                        <TextBlock
+                            Margin="10"
+                            Grid.Row="0"
+                            Grid.ColumnSpan="2"
+                            HorizontalAlignment="Center">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}Коэффициенты: {0}">
+                                    <Binding Path="MessageProcessor.TotalNumbered"/>                                    
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>    
+                        
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Command="{Binding MessageProcessor.addNumberedCmd}">
+                            Добавить
+                        </Button>
+                        <Button
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Command="{Binding MessageProcessor.clearNumberedCmd}">
+                            Очистить
+                        </Button>
+                        
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+
+        <Grid.Styles>
+            <Style Selector="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+            <Style Selector="TextBox">
+                <Setter Property="IsReadOnly" Value="{Binding !IsEditable}"/>
+            </Style>
+        </Grid.Styles>
+
+    </Grid>
+
+</UserControl>

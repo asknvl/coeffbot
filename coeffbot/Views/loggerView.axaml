@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"             
+             xmlns:cust="using:coeffbot.Views.custom"
+             xmlns:conv="using:coeffbot.Views.converters"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"             
+             x:Class="coeffbot.Views.loggerView">
+    
+    <UserControl.Styles>
+        <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />
+    </UserControl.Styles>
+
+    <UserControl.Resources>
+        <conv:LogMessageTypeToBackgroundConverter x:Key="LogMessageTypeConverter"/>
+    </UserControl.Resources>
+    
+    <Grid
+        RowDefinitions="Auto, *">
+        <Grid            
+            Grid.Row="0"            
+            ColumnDefinitions="Auto, *, 80, 80, 80">
+            <CheckBox             
+                IsChecked="{Binding IsFilterEnabled}"                
+                Grid.Column="0"
+                Margin="4"
+                FontSize="12">
+                Фильтры:
+            </CheckBox>
+            <TextBox                                
+                Grid.Column="1"
+                Text="{Binding Filter}"
+                VerticalAlignment="Center"
+                Margin="20, 0, 20, 0"/>
+            <CheckBox                
+                Grid.Column="2"
+                IsChecked="{Binding DBG}">
+                DBG
+            </CheckBox>
+            <CheckBox                
+                Grid.Column="3"
+                IsChecked="{Binding ERR}">
+                ERR
+            </CheckBox>
+            <CheckBox
+                Grid.Column="4"
+                IsChecked="{Binding INF}">
+                INF
+            </CheckBox>
+        </Grid>
+
+        <cust:AutoScrollListBox
+            Grid.Row="1"
+            Items="{Binding Messages}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid
+                        ColumnDefinitions="100, 150, *"
+                        Background="{Binding Type, Converter={StaticResource LogMessageTypeConverter}}">
+                        <TextBlock
+                            Grid.Column="0"
+                            Text="{Binding TAG}"/>
+                        <TextBlock
+                            Grid.Column="1"
+                            Text="{Binding Date}"/>
+                        <TextBox           
+                            Classes="TextBox Log"
+                            FontFamily="Consolas"
+                            IsReadOnly="True"
+                            Grid.Column="2"
+                            Margin="2"
+                            Padding="0"
+                            VerticalContentAlignment="Center"
+                            VerticalAlignment="Center"
+                            Text="{Binding Text}"/>
+                        <Grid.Styles>
+                            <Style Selector="TextBlock">
+                                <Setter Property="FontFamily" Value="Consolas"/>
+                            </Style>                            
+                        </Grid.Styles>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="Margin" Value="0"/>
+                    <Setter Property="Padding" Value="0"/>
+                </Style>
+                <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+                    <Setter Property="BorderBrush" Value="Transparent"/>
+                </Style>
+            </ListBox.Styles>
+        </cust:AutoScrollListBox>
+    </Grid>
+
+</UserControl>

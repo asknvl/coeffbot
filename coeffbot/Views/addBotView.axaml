@@ -1,0 +1,140 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="coeffbot.Views.addBotView">
+    <UserControl.Styles>
+        <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />
+    </UserControl.Styles>
+
+    <Grid
+        Height="230"
+        VerticalAlignment="Top"
+        RowDefinitions="*, 30">
+        <StackPanel
+            Grid.Row="0"
+            Orientation="Vertical">
+            <Grid
+                ColumnDefinitions="100, 80">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Тип:
+                </TextBlock>
+                <ComboBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="2"
+                    Width="150"                    
+                    Items="{Binding BotTypes}"
+                    SelectedItem="{Binding Type}">                    
+                </ComboBox>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 80">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Геотег:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Geotag}"/>
+            </Grid>
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Токен:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Token}"/>
+            </Grid>
+            <!--<Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Ссылка:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Link}"/>
+            </Grid>-->
+            <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Личка:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding PM}"/>
+            </Grid>
+            <Grid
+               ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Источники:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Sources}"/>
+            </Grid>
+            <!--<Grid
+               ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Канал:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Channel}"/>
+            </Grid>-->
+            <Grid
+                Margin="103, 0, 0, 0">
+                <CheckBox
+                    FontSize="12"
+                    VerticalAlignment="Center"
+                    IsChecked="{Binding Postbacks}">
+                    Получать постбеки
+                </CheckBox>
+            </Grid>
+        </StackPanel>
+
+        <Grid
+            ColumnDefinitions="Auto, Auto"
+            Grid.Row="1">
+            <Button
+                Grid.Column="0"
+                Command="{Binding addCmd}">
+                Создать
+            </Button>
+            <Button
+                Grid.Column="1"
+                Command="{Binding cancelCmd}">
+                Отмена
+            </Button>
+        </Grid>
+
+        <Grid.Styles>
+            <Style Selector="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+            </Style>
+        </Grid.Styles>
+
+    </Grid>
+</UserControl>

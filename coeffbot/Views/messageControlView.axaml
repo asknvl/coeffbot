@@ -1,0 +1,82 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="coeffbot.Views.messageControlView">
+
+    <UserControl.Styles>
+        <StyleInclude Source="/Views/Styles/WindowStyle.axaml" />
+    </UserControl.Styles>
+
+    <Grid
+        ColumnDefinitions="100, 100, *"
+        HorizontalAlignment="Left">
+        <!--<TextBlock
+            Grid.Column="0"
+            Text="{Binding IsSet}"/>-->
+        <Button
+            Classes="Button Hyper"
+            Grid.Column="0"
+            Margin="0"
+            IsEnabled="{Binding IsSet}"
+            Command="{Binding showCmd}">
+            Посмотреть
+        </Button>
+        <Button
+            Classes="Button Hyper"
+            Grid.Column="1"
+            Margin="1"
+            Command="{Binding updateCmd}">
+            Установить
+        </Button>        
+        <TextBlock        
+            Grid.Column="2"
+            Text="{Binding Description}"/>
+        <Grid.Styles>
+            <Style Selector="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+        </Grid.Styles>
+        <Grid.Styles>
+            <!--<Style Selector="Button">                
+                <Setter Property="BorderThickness" Value="0"/>                
+                <Setter Property="MinHeight" Value="0"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>                
+            </Style>
+            <Style Selector="Button TextBox:disabled /template/ Border#PART_BorderElement">
+                <Setter Property="Background" Value="Red" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>-->
+            <Style Selector="Button.Hyper">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="#FF0BB3E8"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style Selector="Button.Hyper:pointerover TextBlock">
+            </Style>
+            <Style Selector="Button.Hyper:not(:pointerover) TextBlock">
+                <Setter Property="TextDecorations" Value="Underline"/>
+            </Style>
+            <Style Selector="Button.Hyper TextBlock">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="TextBlock.Foreground" Value="#FF0BB3E8"/>
+            </Style>
+
+            <!--<Style Selector="Button">           
+                <Setter Property="Background" Value="Red"/>
+                <Setter Property="TextBlock.Foreground" Value="Black"/>                
+            </Style>            
+            <Style Selector="Button[IsEnabled=False]">            
+                <Setter Property="TextBlock.Foreground" Value="Gray"/>            
+            </Style>-->
+        </Grid.Styles>
+    </Grid>
+
+</UserControl>
