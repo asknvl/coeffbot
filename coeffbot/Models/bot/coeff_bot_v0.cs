@@ -111,6 +111,7 @@ namespace coeffbot.Models.bot
                     try
                     {
                         var subscribes = await server.GetUserInfoByTGid(chat);
+                        
                         var info = subscribes.FirstOrDefault(s => s.geo.Equals(Sources));
 
                         var player_id = await getPlayerId(chat);
