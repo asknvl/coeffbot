@@ -170,9 +170,9 @@ namespace coeffbot.Models.bot
 
                     case "start_ok":                        
                         await bot.SendTextMessageAsync(chat, "⏳Wait a few seconds...");
-                        await Task.Delay(5000);
+                        await Task.Delay(10000);
                         await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
-                        await Task.Delay(2000);
+                        await Task.Delay(20000);
                         m = MessageProcessor.GetNumberedMessage(player_id);
                         await m.Send(chat, bot);
                         break;
@@ -181,7 +181,7 @@ namespace coeffbot.Models.bot
                         await bot.SendTextMessageAsync(chat, "⏳ Please wait a few minutes, the bot is calculating the Aviator’s vulnerabilities...");
                         await Task.Delay(5000);
                         await bot.SendTextMessageAsync(chat, "🔐 Just a little bit left");
-                        await Task.Delay(2000);
+                        await Task.Delay(10000);
                         await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
                         await Task.Delay(20000);
                         m = MessageProcessor.GetNumberedMessage(player_id);
