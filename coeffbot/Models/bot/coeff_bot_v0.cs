@@ -35,6 +35,7 @@ namespace coeffbot.Models.bot
             Geotag = model.geotag;
             Token = model.token;
             PM = model.pm;  
+            Landing = model.landing;
             Sources = model.sources;
         }
 

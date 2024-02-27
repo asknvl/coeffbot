@@ -95,6 +95,13 @@ namespace coeffbot.Model.bot
             set => this.RaiseAndSetIfChanged(ref pm, value);
         }
 
+        string landing;
+        public string Landing
+        {
+            get => landing;
+            set => this.RaiseAndSetIfChanged(ref landing, value);
+        }
+
         string sources;
         public string Sources
         {

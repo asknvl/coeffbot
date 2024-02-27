@@ -85,6 +85,7 @@ namespace motivebot.Model.storage.local
                     found.token = bot.token;
                     found.postbacks = bot.postbacks;    
                     found.pm = bot.pm;
+                    found.landing = bot.landing;
                     found.sources = bot.sources;    
                     storage.save(BotModels);
                 }
