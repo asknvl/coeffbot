@@ -105,6 +105,8 @@ namespace coeffbot.ViewModels
                     geotag = Geotag,
                     token = Token,                    
                     postbacks = Postbacks,
+                    pm = PM,
+                    sources = Sources
                     
                 };
                 BotCreatedEvent?.Invoke(model);
