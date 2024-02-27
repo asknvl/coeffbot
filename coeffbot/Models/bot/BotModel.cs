@@ -14,6 +14,7 @@ namespace coeffbot.Model.bot
         public string geotag { get; set; }
         public string token { get; set; }   
         public string pm { get; set; }        
+        public string landing { get; set; }
         public string sources { get; set; }
         public bool? postbacks { get; set; }
         //public List<long> operators_id { get; set; } = new();

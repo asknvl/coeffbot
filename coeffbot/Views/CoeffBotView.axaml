@@ -94,6 +94,18 @@
                     Text="{Binding PM}"/>
             </Grid>
             <Grid
+                ColumnDefinitions="100, 250">
+                <TextBlock
+                    Grid.Column="0"
+                    Grid.Row="0">
+                    Лендинг:
+                </TextBlock>
+                <TextBox
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Text="{Binding Landing}"/>
+            </Grid>
+            <Grid
                ColumnDefinitions="100, 250">
                 <TextBlock
                     Grid.Column="0"

@@ -54,6 +54,13 @@ namespace coeffbot.ViewModels
             set => this.RaiseAndSetIfChanged(ref pm, value);
         }
 
+        string landing;
+        public string Landing
+        {
+            get => landing;
+            set => this.RaiseAndSetIfChanged(ref landing, value);
+        }
+
         string sources;
         public string Sources
         {
@@ -101,6 +108,7 @@ namespace coeffbot.ViewModels
                     geotag = Geotag,
                     token = Token,                    
                     pm = PM,
+                    landing = Landing,
                     sources = Sources,
                     postbacks = Postbacks,
                 };
