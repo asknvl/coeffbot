@@ -190,7 +190,7 @@ namespace coeffbot.Models.bot
                         break;
 
                     case "lose":
-                        m = MessageProcessor.GetMessage("lose", url: "https://aviatorprime.space");//
+                        m = MessageProcessor.GetMessage("lose", url: Landing);//
                         await m.Send(chat, bot);
                         break;
 

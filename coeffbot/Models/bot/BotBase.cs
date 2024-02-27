@@ -175,7 +175,10 @@ namespace coeffbot.Model.bot
                 {
                     type = Type,
                     geotag = Geotag,
-                    token = Token,                    
+                    token = Token,                  
+                    pm = PM,
+                    landing = Landing,
+                    sources = Sources,
                     postbacks = Postbacks
                 };
 
@@ -187,7 +190,9 @@ namespace coeffbot.Model.bot
                 Geotag = tmpBotModel.geotag;
                 Token = tmpBotModel.token;                
                 Postbacks = tmpBotModel.postbacks;
-
+                Landing = tmpBotModel.landing;
+                PM = tmpBotModel.pm;
+                Sources =tmpBotModel.sources;
                 IsEditable = false;
 
             });
@@ -199,7 +204,10 @@ namespace coeffbot.Model.bot
                 {
                     type = Type,
                     geotag = Geotag,
-                    token = Token,                    
+                    token = Token,    
+                    pm = PM,
+                    landing = Landing,
+                    sources = Sources,
                     postbacks = Postbacks
                 };
 
