@@ -248,6 +248,22 @@ namespace coeffbot.Model.bot
                     case State.waiting_new_numbered_message:
                         MessageProcessor.Add(message);
                         break;
+
+                    case State.free:
+
+                        switch (message.Text)
+                        {
+                            case "/add":
+                                await bot.SendTextMessageAsync(chat, "");
+                                state = State.waiting_new_numbered_message;
+                                break;
+                            case "/clear":
+                                await bot.SendTextMessageAsync(chat, "");
+                                break;
+                        }
+
+                        break;
+
                 }                
             }
             catch (Exception ex)
@@ -317,10 +333,9 @@ namespace coeffbot.Model.bot
             {
                 await processOperator(message, op);
             }
-            else
-            {
-                await processFollower(message);
-            }
+           
+            await processFollower(message);
+            
         }
 
         async Task HandleUpdateAsync(ITelegramBotClient bot, Update update, CancellationToken cancellationToken)
