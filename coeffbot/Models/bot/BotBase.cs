@@ -36,6 +36,13 @@ namespace coeffbot.Model.bot
 {
     public abstract class BotBase : ViewModelBase, IPushObserver, IStatusObserver, INotifyObserver
     {
+        #region const
+        public enum UserState
+        {
+            waiting_password,
+            free
+        }
+        #endregion
 
         #region vars        
         protected IOperatorStorage operatorStorage;
@@ -48,6 +55,7 @@ namespace coeffbot.Model.bot
         protected long ID;
         IMessageProcessorFactory messageProcessorFactory;
         BotModel tmpBotModel;
+        Dictionary<long, UserState> userStates = new();
 
         protected List<long> userIDs = new List<long>();
         #endregion
@@ -219,8 +227,39 @@ namespace coeffbot.Model.bot
             #endregion
         }
 
+        #region helpers
+        protected InlineKeyboardMarkup getStopMarkup()
+        {
+            InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
+            buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "STOP", callbackData: "adm_stop") };
+            return buttons;
+        }
+
+        protected void setUserState(long userId, UserState userState)
+        {
+            if (userStates.ContainsKey(userId))
+                userStates[userId] = userState;
+            else
+                userStates.Add(userId, userState);
+        }
+
+        protected void removeUser(long userId)
+        {
+            if (userStates.ContainsKey(userId))
+                userStates.Remove(userId);
+        }
+
+        protected bool checkUserState(long userId, UserState state)
+        {
+            if (userStates.ContainsKey(userId))
+                return userStates[userId] == state;
+            else
+                return false;
+        }
+        #endregion
+
         #region private
-        protected abstract Task processFollower(Message message);
+        protected abstract Task processFollowerActions(Message message);
 
         protected abstract Task processCallbackQuery(CallbackQuery query);        
 
@@ -231,48 +270,58 @@ namespace coeffbot.Model.bot
            
         }
 
-        protected virtual async Task processOperator(Message message, Operator op)
+        protected virtual async Task processAdminActions(Message message, Operator op)
         {
 
-            var chat = message.From.Id;
+            var chat = message.From.Id;            
 
             try
             {
 
+                switch (message.Text)
+                {
+                    case "/start":                        
+                        state = State.free;
+                        return;                        
+
+                    case "/add":
+                        removeUser(chat);
+                        await bot.SendTextMessageAsync(chat, "Добавьте сообщения с коефициентами:");
+                        state = State.waiting_adm_numbered_message;
+                        return;
+                    case "/clear":
+                        removeUser(chat);
+                        MessageProcessor.Clear(true);
+                        await bot.SendTextMessageAsync(chat, "Сообщения удалены");
+                        return;
+                }
+
                 switch (state)
                 {
                     case State.waiting_new_state_message:
-                        MessageProcessor.Add(AwaitedMessageCode, message);                        
+                        MessageProcessor.Add(AwaitedMessageCode, message);
+                        state = State.free;
                         break;
 
                     case State.waiting_new_numbered_message:
-                        MessageProcessor.Add(message);
+                        MessageProcessor.Add(message, false);
+                        state = State.free;
                         break;
 
-                    case State.free:
-
-                        switch (message.Text)
-                        {
-                            case "/add":
-                                await bot.SendTextMessageAsync(chat, "");
-                                state = State.waiting_new_numbered_message;
-                                break;
-                            case "/clear":
-                                await bot.SendTextMessageAsync(chat, "");
-                                break;
-                        }
-
+                    case State.waiting_adm_numbered_message:
+                        MessageProcessor.Add(message, true);
+                        await bot.SendTextMessageAsync(chat, "СТОП", replyMarkup: getStopMarkup());
                         break;
+
+                    case State.free:                        
+                        return;
 
                 }                
             }
             catch (Exception ex)
             {
                 logger.err(Geotag, ex.Message);
-            } finally
-            {
-                state = State.free;
-            }
+            } 
         }
 
         async Task processSubscribe(Update update)
@@ -328,13 +377,13 @@ namespace coeffbot.Model.bot
         {
             long chat = message.Chat.Id;
 
-            var op = operatorStorage.GetOperator(geotag, chat);
+            var op = operatorStorage.GetOperator(Geotag, chat);
             if (op != null)
             {
-                await processOperator(message, op);
+                await processAdminActions(message, op);
             }
            
-            await processFollower(message);
+            await processFollowerActions(message);
             
         }
 

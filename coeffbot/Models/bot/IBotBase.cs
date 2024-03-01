@@ -21,6 +21,7 @@ namespace coeffbot.Model.bot
     {
         free,
         waiting_new_state_message, //Детерменированные сообщения
-        waiting_new_numbered_message //Сообщения которые просто идут по порядку или в хаотичном порядке
+        waiting_new_numbered_message, //Сообщения которые просто идут по порядку или в хаотичном порядке
+        waiting_adm_numbered_message, //Сообщения которые просто идут по порядку или в хаотичном порядке
     }
 }

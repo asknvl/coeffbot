@@ -25,9 +25,9 @@ namespace coeffbot.Models.bot
         const string password = "Amir$$$";
         #endregion
 
-        #region vars
-        Dictionary<long, UserState> userStates = new();
+        #region vars     
         Dictionary<long, string> playerIDs = new();
+        int index = 0;
         #endregion
 
         public coeff_bot_v0(BotModel model, IOperatorStorage operatorStorage, IBotStorage botStorage, ILogger logger) : base(operatorStorage, botStorage, logger)
@@ -43,21 +43,7 @@ namespace coeffbot.Models.bot
 
 
         #region helpers
-        void setUserState(long userId, UserState userState)
-        {
-            if (userStates.ContainsKey(userId))
-                userStates[userId] = userState;
-            else
-                userStates.Add(userId, userState);
-        }
-
-        bool checkUserState(long userId, UserState state)
-        {
-            if (userStates.ContainsKey(userId))
-                return userStates[userId] == state;
-            else
-                return false;
-        }
+       
 
         async Task<string> getPlayerId(long chat) {
 
@@ -139,19 +125,17 @@ namespace coeffbot.Models.bot
                 logger.err(Geotag, $"checkPlayersId: {chat} {ex.Message}");
             }
             return res;
-        }
+        }       
         #endregion
 
-        enum UserState
-        {
-            waiting_password,
-            free
-        }
-
+      
+                
         protected override async Task processCallbackQuery(CallbackQuery query)
         {
             long chat = query.Message.Chat.Id;
             PushMessageBase message = null;
+
+            var op = operatorStorage.GetOperator(Geotag, chat) != null;
 
             try
             {
@@ -171,21 +155,59 @@ namespace coeffbot.Models.bot
 
                     case "start_ok":                        
                         await bot.SendTextMessageAsync(chat, "⏳Wait a few seconds...");
+#if RELEASE
                         await Task.Delay(10000);
+#endif
                         await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
+#if RELEASE
                         await Task.Delay(20000);
-                        m = MessageProcessor.GetNumberedMessage(player_id);
+#endif
+                        if (op)
+                        {
+                            try
+                            {
+                                m = MessageProcessor.GetAdmNumberedMessage(player_id, index++);
+                            }
+                            catch (Exception ex)
+                            {
+                                await bot.SendTextMessageAsync(chat, "Нет сообщений с коэффициентами");
+                            }
+                        }
+                        else
+                        {
+                            m = MessageProcessor.GetNumberedMessage(player_id);
+                        }
                         await m.Send(chat, bot);
                         break;
 
                     case "win":                        
                         await bot.SendTextMessageAsync(chat, "⏳ Please wait a few minutes, the bot is calculating the Aviator’s vulnerabilities...");
+#if RELEASE
                         await Task.Delay(5000);
+#endif
                         await bot.SendTextMessageAsync(chat, "🔐 Just a little bit left");
+#if RELEASE
                         await Task.Delay(10000);
+#endif
                         await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
+#if RELEASE
                         await Task.Delay(20000);
-                        m = MessageProcessor.GetNumberedMessage(player_id);
+#endif
+                        if (op)
+                        {
+                            try
+                            {
+                                m = MessageProcessor.GetAdmNumberedMessage(player_id, index++);
+                            } catch (Exception ex)
+                            {
+                                await bot.SendTextMessageAsync(chat, "Нет сообщений с коэффициентами");
+                            }
+                        }
+                        else
+                        {
+                            m = MessageProcessor.GetNumberedMessage(player_id);
+                        }
+
                         await m.Send(chat, bot);
                         break;
 
@@ -199,6 +221,11 @@ namespace coeffbot.Models.bot
                         buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CONNECT", callbackData: $"win") };
                         await bot.SendTextMessageAsync(chat, "📲TO CONTINUE RECEIVING SIGNALS, CLICK THE \"CONNECT\" BUTTON", replyMarkup: (InlineKeyboardMarkup)buttons);
                         break;
+
+                    case "adm_stop":
+                        state = State.free;
+                        await bot.SendTextMessageAsync(chat, "Сообщения добавлены");
+                        break;
                 }
 
             }
@@ -210,7 +237,7 @@ namespace coeffbot.Models.bot
 
 
 
-        protected override async Task processFollower(Message message)
+        protected override async Task processFollowerActions(Message message)
         {
 
             if (message.Text == null)
@@ -233,6 +260,7 @@ namespace coeffbot.Models.bot
                         await bot.SendTextMessageAsync(chat, "🔐ENTER PASSWORD🔐");
                         await bot.SendTextMessageAsync(chat, "⬇️⁣");
                         setUserState(chat, UserState.waiting_password);
+                        index = 0;
                         break;
 
                     default:

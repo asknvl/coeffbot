@@ -24,9 +24,11 @@ namespace coeffbot.Models.messages
         #region vars
         protected Dictionary<string, StateMessage> state_messages = new();
         protected Dictionary<string, StateMessage> numbr_messages = new();
+        protected Dictionary<string, StateMessage> adm_numbr_messages = new();
 
         IStorage<Dictionary<string, StateMessage>> stateMessageStorage;
         IStorage<Dictionary<string, StateMessage>> numbrMessageStorage;
+        IStorage<Dictionary<string, StateMessage>> admNumbrMessageStorage;
 
         string geotag;
         string token;
@@ -98,19 +100,31 @@ namespace coeffbot.Models.messages
             StateMessageUpdatedEvent?.Invoke(code, true);
         }
 
-        public async void Add(Message message)
+        public async void Add(Message message, bool isadmin)
         {
             var pattern = await StateMessage.Create(bot, message, geotag, token);
-            pattern.Id = numbr_messages.Count();
-            numbr_messages.Add($"{pattern.Id}", pattern);
-            numbrMessageStorage.save(numbr_messages);
-            TotalNumbered = numbr_messages.Count(); 
+            
+
+            if (!isadmin)
+            {
+                pattern.Id = numbr_messages.Count();
+                numbr_messages.Add($"{pattern.Id}", pattern);
+                numbrMessageStorage.save(numbr_messages);
+                TotalNumbered = numbr_messages.Count();
+            }
+            else
+            {
+                pattern.Id = adm_numbr_messages.Count();
+                adm_numbr_messages.Add($"{pattern.Id}", pattern);
+                admNumbrMessageStorage.save(adm_numbr_messages);
+            }
         }
 
         public void Init()
         {
             stateMessageStorage = new Storage<Dictionary<string, StateMessage>>($"{geotag}_state.json", "messages", state_messages);
-            numbrMessageStorage = new Storage<Dictionary<string, StateMessage>>($"{geotag}_numbr.json", "messages", state_messages);
+            numbrMessageStorage = new Storage<Dictionary<string, StateMessage>>($"{geotag}_numbr.json", "messages", numbr_messages);
+            admNumbrMessageStorage = new Storage<Dictionary<string, StateMessage>>($"{geotag}_adm_numbr.json", "messages", adm_numbr_messages);
 
             state_messages = stateMessageStorage.load();
             foreach (var item in state_messages)
@@ -121,16 +135,22 @@ namespace coeffbot.Models.messages
             numbr_messages = numbrMessageStorage.load();
             TotalNumbered = numbr_messages.Count();
 
+            adm_numbr_messages = admNumbrMessageStorage.load(); 
+
         }
 
-        public void Clear()
-        {
-            state_messages.Clear();
-            stateMessageStorage.save(state_messages);
+        public void Clear(bool isadmin)
+        {            
+            if (isadmin)
+            {
+                adm_numbr_messages.Clear();
+                admNumbrMessageStorage.save(adm_numbr_messages);
+            }
         }
 
         public abstract StateMessage GetMessage(string status, string? playerid = null, string? pm = null, string? url = null);
         public abstract StateMessage GetNumberedMessage(string? playerid);
+        public abstract StateMessage GetAdmNumberedMessage(string? playerid, int index);
 
         public async Task UpdateMessageRequest(string code)
         {

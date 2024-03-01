@@ -118,7 +118,7 @@ namespace coeffbot.Models.messages
 
                 case "lose":
                     markUp = getLoseMarkup(url: url);
-                    break;
+                    break;               
 
                 default:
                     break;
@@ -185,6 +185,29 @@ namespace coeffbot.Models.messages
             var key = $"{keys[index]}";
 
             var msg = numbr_messages[key];
+
+            List<AutoChange> autoChange = new List<AutoChange>()
+            {
+                new AutoChange() {
+                    OldText = "playerid.chng",
+                    NewText = $"{playerid}"
+                }
+            };
+
+            var _msg = msg.Clone();
+            _msg.MakeAutochange(autoChange);
+            _msg.Message.ReplyMarkup = getNextKefMarkup();
+
+            return _msg;
+        }
+
+        public override StateMessage GetAdmNumberedMessage(string? playerid, int index)
+        {
+            var keys = adm_numbr_messages.Keys.ToList();
+            index = index % keys.Count;
+            var key = $"{keys[index]}";
+
+            var msg = adm_numbr_messages[key];
 
             List<AutoChange> autoChange = new List<AutoChange>()
             {
