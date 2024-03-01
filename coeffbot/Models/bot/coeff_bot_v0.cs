@@ -155,13 +155,18 @@ namespace coeffbot.Models.bot
 
                     case "start_ok":                        
                         await bot.SendTextMessageAsync(chat, "⏳Wait a few seconds...");
-#if RELEASE
-                        await Task.Delay(10000);
-#endif
+                        if (!op)                            
+                            await Task.Delay(10000);
+                        else
+                            await Task.Delay(3000);
+
                         await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
-#if RELEASE
-                        await Task.Delay(20000);
-#endif
+
+                        if (!op)
+                            await Task.Delay(20000);
+                        else
+                            await Task.Delay(3000);
+
                         if (op)
                         {
                             try
@@ -182,17 +187,21 @@ namespace coeffbot.Models.bot
 
                     case "win":                        
                         await bot.SendTextMessageAsync(chat, "⏳ Please wait a few minutes, the bot is calculating the Aviator’s vulnerabilities...");
-#if RELEASE
-                        await Task.Delay(5000);
-#endif
+                        if (!op)
+                            await Task.Delay(5000);
+
                         await bot.SendTextMessageAsync(chat, "🔐 Just a little bit left");
-#if RELEASE
-                        await Task.Delay(10000);
-#endif
+                        if (!op)
+                            await Task.Delay(10000);
+                        else
+                            await Task.Delay(2000);
+
                         await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
-#if RELEASE
-                        await Task.Delay(20000);
-#endif
+                        if (!op)
+                            await Task.Delay(20000);
+                        else
+                            await Task.Delay(3000);
+
                         if (op)
                         {
                             try
