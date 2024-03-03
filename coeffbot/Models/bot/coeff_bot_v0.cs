@@ -240,7 +240,7 @@ namespace coeffbot.Models.bot
             }
             catch (Exception ex)
             {
-                logger.err(Geotag, $"processCallbackQuery: {ex.Message}");
+                logger.err(Geotag, $"processCallbackQuery: {chat} {ex.Message}");
             }
         }
 
