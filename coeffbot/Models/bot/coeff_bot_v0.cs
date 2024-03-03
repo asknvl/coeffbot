@@ -220,7 +220,7 @@ namespace coeffbot.Models.bot
                         }
 
                         await m.Send(chat, bot);
-                        logger.dbg(Geotag, $"query: {chat} wim admin={op}");
+                        logger.dbg(Geotag, $"query: {chat} win admin={op}");
                         break;
 
                     case "lose":
