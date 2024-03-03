@@ -151,6 +151,7 @@ namespace coeffbot.Models.bot
                         await bot.SendTextMessageAsync(chat, "❗️INSTRUCTIONS FOR USING BOT SIGNALS\r\n\r\nThe bot issues a signal like this \r\n👇👇👇");
                         m = MessageProcessor.GetMessage("start", playerid: player_id);
                         await m.Send(chat, bot);
+                        logger.dbg(Geotag, $"query: {chat} match_ok");
                         break;
 
                     case "start_ok":                        
@@ -183,6 +184,7 @@ namespace coeffbot.Models.bot
                             m = MessageProcessor.GetNumberedMessage(player_id);
                         }
                         await m.Send(chat, bot);
+                        logger.dbg(Geotag, $"query: {chat} start_ok admin={op}");
                         break;
 
                     case "win":                        
@@ -218,22 +220,26 @@ namespace coeffbot.Models.bot
                         }
 
                         await m.Send(chat, bot);
+                        logger.dbg(Geotag, $"query: {chat} wim admin={op}");
                         break;
 
                     case "lose":
                         m = MessageProcessor.GetMessage("lose", url: Landing);///
                         await m.Send(chat, bot);
+                        logger.dbg(Geotag, $"query: {chat} lose admin={op}");
                         break;
 
                     case "stop":                        
                         InlineKeyboardButton[][] buttons = new InlineKeyboardButton[1][];
                         buttons[0] = new InlineKeyboardButton[] { InlineKeyboardButton.WithCallbackData(text: "CONNECT", callbackData: $"win") };
                         await bot.SendTextMessageAsync(chat, "📲TO CONTINUE RECEIVING SIGNALS, CLICK THE \"CONNECT\" BUTTON", replyMarkup: (InlineKeyboardMarkup)buttons);
+                        logger.dbg(Geotag, $"query: {chat} stop admin={op}");
                         break;
 
                     case "adm_stop":
                         state = State.free;
                         await bot.SendTextMessageAsync(chat, "Сообщения добавлены");
+                        logger.dbg(Geotag, $"query: {chat} adm_stop admin={op}");
                         break;
                 }
 
@@ -269,6 +275,7 @@ namespace coeffbot.Models.bot
                         await bot.SendTextMessageAsync(chat, "🔐ENTER PASSWORD🔐");
                         await bot.SendTextMessageAsync(chat, "⬇️⁣");
                         setUserState(chat, UserState.waiting_password);
+                        logger.dbg(Geotag, $"action: {chat} /start");
                         index = 0;
                         break;
 
@@ -280,10 +287,12 @@ namespace coeffbot.Models.bot
                             {
                                 await chekPlayersId(chat, fn, ln, un);
                                 setUserState(chat, UserState.free);
+                                logger.dbg(Geotag, $"action: {chat} password OK");
                             } else
                             {
                                 await bot.SendTextMessageAsync(chat, "❗️PLEASE ENTER THE CORRECT PASSWORD");
                                 await bot.SendTextMessageAsync(chat, "⬇️⁣");
+                                logger.dbg(Geotag, $"action: {chat} password FAIL: {text}");
                             }                               
                         }
 
