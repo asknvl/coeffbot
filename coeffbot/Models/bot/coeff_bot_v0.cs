@@ -127,9 +127,7 @@ namespace coeffbot.Models.bot
             return res;
         }       
         #endregion
-
-      
-                
+        
         protected override async Task processCallbackQuery(CallbackQuery query)
         {
             long chat = query.Message.Chat.Id;
@@ -154,73 +152,82 @@ namespace coeffbot.Models.bot
                         logger.dbg(Geotag, $"query: {chat} match_ok");
                         break;
 
-                    case "start_ok":                        
-                        await bot.SendTextMessageAsync(chat, "⏳Wait a few seconds...");
-                        if (!op)                            
-                            await Task.Delay(10000);
-                        else
-                            await Task.Delay(3000);
+                    case "start_ok":
 
-                        await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
+                        Task.Run(async () => { 
 
-                        if (!op)
-                            await Task.Delay(20000);
-                        else
-                            await Task.Delay(3000);
+                            await bot.SendTextMessageAsync(chat, "⏳Wait a few seconds...");
+                            if (!op)                            
+                                await Task.Delay(10000);
+                            else
+                                await Task.Delay(3000);
 
-                        if (op)
-                        {
-                            try
+                            await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
+
+                            if (!op)
+                                await Task.Delay(20000);
+                            else
+                                await Task.Delay(3000);
+
+                            if (op)
                             {
-                                m = MessageProcessor.GetAdmNumberedMessage(player_id, index++);
+                                try
+                                {
+                                    m = MessageProcessor.GetAdmNumberedMessage(player_id, index++);
+                                }
+                                catch (Exception ex)
+                                {
+                                    await bot.SendTextMessageAsync(chat, "Нет сообщений с коэффициентами");
+                                }
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                await bot.SendTextMessageAsync(chat, "Нет сообщений с коэффициентами");
+                                m = MessageProcessor.GetNumberedMessage(player_id);
                             }
-                        }
-                        else
-                        {
-                            m = MessageProcessor.GetNumberedMessage(player_id);
-                        }
-                        await m.Send(chat, bot);
-                        logger.dbg(Geotag, $"query: {chat} start_ok admin={op}");
+                            await m.Send(chat, bot);
+                            logger.dbg(Geotag, $"query: {chat} start_ok admin={op}");
+                        });
                         break;
 
-                    case "win":                        
-                        await bot.SendTextMessageAsync(chat, "⏳ Please wait a few minutes, the bot is calculating the Aviator’s vulnerabilities...");
-                        if (!op)
-                            await Task.Delay(5000);
+                    case "win":
 
-                        await bot.SendTextMessageAsync(chat, "🔐 Just a little bit left");
-                        if (!op)
-                            await Task.Delay(10000);
-                        else
-                            await Task.Delay(2000);
+                        Task.Run(async () => { 
 
-                        await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
-                        if (!op)
-                            await Task.Delay(20000);
-                        else
-                            await Task.Delay(3000);
+                            await bot.SendTextMessageAsync(chat, "⏳ Please wait a few minutes, the bot is calculating the Aviator’s vulnerabilities...");
+                            if (!op)
+                                await Task.Delay(5000);
 
-                        if (op)
-                        {
-                            try
+                            await bot.SendTextMessageAsync(chat, "🔐 Just a little bit left");
+                            if (!op)
+                                await Task.Delay(10000);
+                            else
+                                await Task.Delay(2000);
+
+                            await bot.SendTextMessageAsync(chat, "🔗CONNECTING TO THE ROUND...");
+                            if (!op)
+                                await Task.Delay(20000);
+                            else
+                                await Task.Delay(3000);
+
+                            if (op)
                             {
-                                m = MessageProcessor.GetAdmNumberedMessage(player_id, index++);
-                            } catch (Exception ex)
-                            {
-                                await bot.SendTextMessageAsync(chat, "Нет сообщений с коэффициентами");
+                                try
+                                {
+                                    m = MessageProcessor.GetAdmNumberedMessage(player_id, index++);
+                                } catch (Exception ex)
+                                {
+                                    await bot.SendTextMessageAsync(chat, "Нет сообщений с коэффициентами");
+                                }
                             }
-                        }
-                        else
-                        {
-                            m = MessageProcessor.GetNumberedMessage(player_id);
-                        }
+                            else
+                            {
+                                m = MessageProcessor.GetNumberedMessage(player_id);
+                            }
 
-                        await m.Send(chat, bot);
-                        logger.dbg(Geotag, $"query: {chat} win admin={op}");
+                            await m.Send(chat, bot);
+                            logger.dbg(Geotag, $"query: {chat} win admin={op}");
+
+                        });
                         break;
 
                     case "lose":
